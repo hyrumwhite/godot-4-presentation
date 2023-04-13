@@ -1,0 +1,104 @@
+[gd_scene load_steps=19 format=3 uid="uid://cnl8foj7llq4x"]
+
+[ext_resource type="Texture2D" uid="uid://b7c1wijoqvi8m" path="res://textures/sandy/color_map.jpg" id="2_lfmes"]
+[ext_resource type="Texture2D" uid="uid://cphi780vjpfr1" path="res://textures/sandy/ao_map.jpg" id="3_i6j0m"]
+[ext_resource type="Texture2D" uid="uid://70pajefwiph4" path="res://textures/sandy/displacement_map.jpg" id="4_88lrh"]
+[ext_resource type="Texture2D" uid="uid://bemii0bduocgn" path="res://textures/sandy/normal_map_opengl.jpg" id="5_st3u5"]
+[ext_resource type="Texture2D" uid="uid://cktj5mb00tv4k" path="res://textures/sandy/roughness_map.jpg" id="6_eg4yy"]
+[ext_resource type="Texture2D" uid="uid://ytb0va0qsiyn" path="res://decals/grafiti.png" id="7_fpfqt"]
+[ext_resource type="PackedScene" uid="uid://bmxn2bf7p6h65" path="res://Player.tscn" id="7_ssjqa"]
+[ext_resource type="PackedScene" uid="uid://c1igabs5otgxr" path="res://simple-room.blend" id="8_ufv2l"]
+[ext_resource type="PackedScene" uid="uid://dnknwt3bpahy3" path="res://Enemies/godot.tscn" id="9_us1xp"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_lkmfq"]
+sky_top_color = Color(0.0117647, 0.541176, 0.564706, 1)
+sky_horizon_color = Color(0.494118, 0.627451, 0.494118, 1)
+sky_curve = 0.0955921
+ground_bottom_color = Color(0.666667, 0.552941, 0.360784, 1)
+ground_horizon_color = Color(0.592157, 0.768627, 0.698039, 1)
+ground_curve = 0.00017337
+
+[sub_resource type="Sky" id="Sky_7yiah"]
+sky_material = SubResource("ProceduralSkyMaterial_lkmfq")
+
+[sub_resource type="Environment" id="Environment_yjeaq"]
+background_mode = 2
+sky = SubResource("Sky_7yiah")
+tonemap_mode = 3
+ssr_enabled = true
+ssao_enabled = true
+sdfgi_enabled = true
+glow_enabled = true
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.008
+volumetric_fog_albedo = Color(1, 0.831373, 0.611765, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_80mv4"]
+albedo_texture = ExtResource("2_lfmes")
+roughness_texture = ExtResource("6_eg4yy")
+normal_enabled = true
+normal_texture = ExtResource("5_st3u5")
+ao_enabled = true
+ao_texture = ExtResource("3_i6j0m")
+heightmap_enabled = true
+heightmap_texture = ExtResource("4_88lrh")
+uv1_scale = Vector3(10, 10, 10)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_a8moj"]
+size = Vector2(50, 50)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_ehrk0"]
+data = PackedVector3Array(25, 0, 25, -25, 0, 25, 25, 0, -25, -25, 0, 25, -25, 0, -25, 25, 0, -25)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0q2e0"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_w4jtt"]
+material = SubResource("StandardMaterial3D_0q2e0")
+size = Vector3(10, 15, 18)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_jyeh4"]
+data = PackedVector3Array(-5, 7.5, 9, 5, 7.5, 9, -5, -7.5, 9, 5, 7.5, 9, 5, -7.5, 9, -5, -7.5, 9, 5, 7.5, -9, -5, 7.5, -9, 5, -7.5, -9, -5, 7.5, -9, -5, -7.5, -9, 5, -7.5, -9, 5, 7.5, 9, 5, 7.5, -9, 5, -7.5, 9, 5, 7.5, -9, 5, -7.5, -9, 5, -7.5, 9, -5, 7.5, -9, -5, 7.5, 9, -5, -7.5, -9, -5, 7.5, 9, -5, -7.5, 9, -5, -7.5, -9, 5, 7.5, 9, -5, 7.5, 9, 5, 7.5, -9, -5, 7.5, 9, -5, 7.5, -9, 5, 7.5, -9, -5, -7.5, 9, 5, -7.5, 9, -5, -7.5, -9, 5, -7.5, 9, 5, -7.5, -9, -5, -7.5, -9)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+light_color = Color(0.831373, 0.843137, 0.682353, 1)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_yjeaq")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_80mv4")
+mesh = SubResource("PlaneMesh_a8moj")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_ehrk0")
+
+[node name="Building" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.0545, 0, 10.8791)
+mesh = SubResource("BoxMesh_w4jtt")
+
+[node name="Decal" type="Decal" parent="Building"]
+transform = Transform3D(-6.55671e-08, -1.5, 6.55671e-08, 0, -6.55671e-08, -1.5, 1.5, -6.55671e-08, 2.86603e-15, -5, 1.66739, -4.8034)
+texture_albedo = ExtResource("7_fpfqt")
+normal_fade = 0.5
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Building"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Building/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_jyeh4")
+
+[node name="CharacterBody3D" parent="." instance=ExtResource("7_ssjqa")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.976611, 0)
+velocity = Vector3(0, -1536.45, 0)
+
+[node name="simple-room" parent="." instance=ExtResource("8_ufv2l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -19)
+
+[node name="godot" parent="." node_paths=PackedStringArray("target") instance=ExtResource("9_us1xp")]
+transform = Transform3D(0.0258819, 0.0965926, -4.2222e-09, 0, -4.37114e-09, -0.1, -0.0965926, 0.0258819, -1.13133e-09, -10, 2, 0)
+target = NodePath("../CharacterBody3D")
